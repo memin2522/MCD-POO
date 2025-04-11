@@ -9,6 +9,8 @@ List<int> primeB = DecomposeNumber(numB);
 List<List<int>> countPrimeA = CountPrimeNumbers(primeA);
 List<List<int>> countPrimeB = CountPrimeNumbers(primeB);
 
+int mcd = CalculateMCD(countPrimeA, countPrimeB);
+Console.WriteLine($"The MCD of {numA} and {numB} is: {mcd}");
 
 List<int> DecomposeNumber(int number)
 {
@@ -36,33 +38,63 @@ List<int> DecomposeNumber(int number)
             primeNumbers.Add(7);
             number = number / 7;
         }
+        else
+        {
+            primeNumbers.Add(number);
+            number = 1;
+        }
     }
     return primeNumbers;
 }
 
-List<List<int>> CountPrimeNumbers(List<int> lista)
+List<List<int>> CountPrimeNumbers(List<int> primeList)
 {
-    List<List<int>> conteo = new List<List<int>>();
+    List<List<int>> count = new List<List<int>>();
 
-    foreach (int p in lista)
+    foreach (int prime in primeList)
     {
-        bool encontrado = false;
+        bool exists = false;
 
-        for (int i = 0; i < conteo.Count; i++)
+        for (int i = 0; i < count.Count; i++)
         {
-            if (conteo[i][0] == p)
+            if (count[i][0] == prime)
             {
-                conteo[i][1]++;
-                encontrado = true;
+                count[i][1]++;
+                exists = true;
                 break;
             }
         }
 
-        if (!encontrado)
+        if (!exists)
         {
-            conteo.Add(new List<int> { p, 1 });
+            count.Add(new List<int> { prime, 1 });
         }
     }
 
-    return conteo;
+    return count;
+}
+
+int CalculateMCD(List<List<int>> countA, List<List<int>> countB)
+{
+    int result = 1;
+
+    for (int i = 0; i < countA.Count; i++)
+    {
+        for (int j = 0; j < countB.Count; j++)
+        {
+            if (countA[i][0] == countB[j][0])
+            {
+                if (countA[i][1] < countB[j][1])
+                {
+                    result *= (int)Math.Pow(countA[i][0], countA[i][1]);
+                }
+                else
+                {
+                    result *= (int)Math.Pow(countB[j][0], countB[j][1]);
+                }
+            }
+        }
+    }
+
+    return result;
 }
